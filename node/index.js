@@ -114,15 +114,18 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    if (region === 'all') {
-      for (let regionKey in regions) {
-        for (let channelKey in regions[regionKey].channels) {
-          if (!channels[channelKey]) {
-            channels[channelKey] = { ...regions[regionKey].channels[channelKey], region: regions[regionKey].name || regionKey.toUpperCase() };
-          }
-        }
-      }
-    } else if (regions[region]) {
+	if (region === 'all') {
+	  for (let regionKey in regions) {
+		for (let channelKey in regions[regionKey].channels) {
+		  const regionChannel = { ...regions[regionKey].channels[channelKey], region: regions[regionKey].name || regionKey.toUpperCase() };
+
+		  // Generate a unique channelId for each region to avoid overwriting
+		  const uniqueChannelId = `${channelKey}-${regionKey}`;
+		  
+		  channels[uniqueChannelId] = regionChannel;
+		}
+	  }
+	} else if (regions[region]) {
       channels = regions[region].channels || {};
     } else {
       res.writeHead(400, { 'Content-Type': 'text/plain' });
