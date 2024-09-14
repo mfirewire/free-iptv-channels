@@ -105,12 +105,15 @@ function doGet(e) {
     if (region === 'all') {
       for (let regionKey in regions) {
         for (let channelKey in regions[regionKey].channels) {
-          if (!channels[channelKey]) {
-            channels[channelKey] = { ...regions[regionKey].channels[channelKey], region: regions[regionKey].name || regionKey.toUpperCase() };
-          }
+          const regionChannel = { ...regions[regionKey].channels[channelKey], region: regions[regionKey].name || regionKey.toUpperCase() };
+
+          // Generate a unique channelId for each region to avoid overwriting
+          const uniqueChannelId = `${channelKey}-${regionKey}`;
+          
+          channels[uniqueChannelId] = regionChannel;
         }
       }
-    } else if (regions[region]) {
+    }  else if (regions[region]) {
       channels = regions[region].channels || {};
     } else {
       return ContentService.createTextOutput(`Error: Invalid region ${region}`).setMimeType(ContentService.MimeType.TEXT);
