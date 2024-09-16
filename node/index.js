@@ -202,6 +202,8 @@ const server = http.createServer(async (req, res) => {
       }
     }
   });
+  
+  output = output.replace(/tvg-id="(.*?)-\w{2}"/g, 'tvg-id="$1"');
 
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end(output);
