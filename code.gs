@@ -197,6 +197,8 @@ function doGet(e) {
     }
   });
 
+  output = output.replace(/tvg-id="(.*?)-\w{2}"/g, 'tvg-id="$1"');
+
   return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.TEXT);
 }
 
